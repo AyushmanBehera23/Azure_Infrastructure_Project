@@ -5,7 +5,6 @@ const primary = [
   { id: 'overview',     label: 'Overview' },
   { id: 'architecture', label: 'Graph' },
   { id: 'compute',      label: 'Compute' },
-  { id: 'security',     label: 'Security' },
   { id: 'build-guide',  label: 'Guide' },
 ];
 

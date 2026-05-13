@@ -108,17 +108,17 @@ const Tooltip = ({ data }) => {
 
 const DiagramSVG = ({ onHover }) => {
   const X = { u: 110, g: 290, r: 470, s: 660, n: 845, ni: 1020, vm: 1195, stor: 1440 };
-  // rows 130px apart; top nodes 55px; groups start at 90px
-  const Y = { top: 55, r1: 145, r2: 275, r3: 405, r4: 535, r5: 645 };
-  const GY = 90;   // group box top — 35px below plane banner bottom (36px)
-  const GH3 = 365; // 3-row: GY→r3+50 = 90→455
-  const GH4 = 495; // 4-row: GY→r4+50 = 90→585
-  const GH5 = 610; // 5-row: GY→r5+60 = 90→705
+  // rows 130px apart; top nodes 85px; groups start at 145px
+  const Y = { top: 85, r1: 200, r2: 330, r3: 460, r4: 590, r5: 700 };
+  const GY = 145;  // group box top
+  const GH3 = 365; // 3-row
+  const GH4 = 495; // 4-row
+  const GH5 = 610; // 5-row
 
   const h = (label, e) => onHover && onHover(label, e);
 
   return (
-    <svg viewBox="0 0 1660 780" width="100%" style={{ display: 'block' }}>
+    <svg viewBox="0 0 1660 840" width="100%" style={{ display: 'block' }}>
       <defs>
         <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation="4" result="b" />
@@ -134,11 +134,7 @@ const DiagramSVG = ({ onHover }) => {
         ))}
       </defs>
 
-      {/* ── Plane banners — pinned at very top ── */}
-      <rect x={38}  y={10} width={530} height={26} rx="6" fill="rgba(172,106,255,0.08)" stroke="rgba(172,106,255,0.25)" strokeWidth="1" />
-      <text x={52}  y={27} fontSize="10" fill={C.purple} fontFamily="Source Code Pro,monospace" fontWeight="700" letterSpacing="1">🔐 MANAGEMENT PLANE — Identity, RBAC &amp; Policy</text>
-      <rect x={582} y={10} width={980} height={26} rx="6" fill="rgba(133,141,255,0.06)" stroke="rgba(133,141,255,0.2)" strokeWidth="1" />
-      <text x={596} y={27} fontSize="10" fill={C.blue}   fontFamily="Source Code Pro,monospace" fontWeight="700" letterSpacing="1">📡 DATA PLANE — Network, Compute &amp; Storage</text>
+      {/* ── Plane banners removed ── */}
 
       {/* ── Group boxes — sized to their content ── */}
       <Group x={42}   y={GY} w={148} h={GH3} label="Entra ID Users"        color={C.purple} />
@@ -159,7 +155,7 @@ const DiagramSVG = ({ onHover }) => {
       {/* ── Edges ── */}
       {/* Vertical drops from top nodes into columns */}
       <Edge x1={X.r}    y1={Y.top+26} x2={X.r}    y2={Y.r1-26} color={C.green}  delay={0}   dur={3.5} />
-      <Edge x1={X.stor} y1={Y.top+26} x2={X.ni}   y2={Y.r1-26} color={C.yellow} delay={0.5} dur={4} />
+      <Edge x1={X.ni}   y1={Y.top+26} x2={X.ni}   y2={Y.r1-26} color={C.yellow} delay={0.5} dur={4} />
       {/* Users → Groups */}
       <Edge x1={X.u+60} y1={Y.r1} x2={X.g-60} y2={Y.r1} color={C.purple} delay={0}   dur={3} />
       <Edge x1={X.u+60} y1={Y.r2} x2={X.g-60} y2={Y.r2} color={C.blue}   delay={0.6} dur={3} />
@@ -197,10 +193,40 @@ const DiagramSVG = ({ onHover }) => {
       {/* Policy vertical */}
       <Edge x1={X.s} y1={Y.r5-26} x2={X.s} y2={Y.r3+26} color={C.blue} delay={2.0} dur={4} />
 
+      {/* ── Internal VM Flows (Allowed & Blocked) ── */}
+      
+      {/* VM-1 -> VM-2 (Allowed) */}
+      <path d="M 1195 223 L 1195 307" fill="none" stroke={C.green} strokeWidth="1.5" strokeOpacity="0.8" markerEnd="url(#arr-green)" />
+      <circle r="4" fill={C.green} filter="url(#glow)">
+        <animateMotion dur="3s" repeatCount="indefinite" path="M 1195 223 L 1195 307" />
+      </circle>
+      <text x={1185} y={258} textAnchor="end" fontSize="8" fill={C.green} fontFamily="Source Code Pro,monospace" fontWeight="700">Allowed</text>
+      <text x={1185} y={269} textAnchor="end" fontSize="7" fill={C.green} opacity="0.8" fontFamily="Source Code Pro,monospace">Internal Secure</text>
+      <text x={1185} y={278} textAnchor="end" fontSize="7" fill={C.green} opacity="0.8" fontFamily="Source Code Pro,monospace">Traffic</text>
+
+      {/* VM-2 -> VM-3 (Allowed) */}
+      <path d="M 1195 353 L 1195 437" fill="none" stroke={C.green} strokeWidth="1.5" strokeOpacity="0.8" markerEnd="url(#arr-green)" />
+      <circle r="4" fill={C.green} filter="url(#glow)">
+        <animateMotion dur="3s" repeatCount="indefinite" path="M 1195 353 L 1195 437" />
+      </circle>
+      <text x={1185} y={388} textAnchor="end" fontSize="8" fill={C.green} fontFamily="Source Code Pro,monospace" fontWeight="700">Allowed</text>
+      <text x={1185} y={399} textAnchor="end" fontSize="7" fill={C.green} opacity="0.8" fontFamily="Source Code Pro,monospace">Internal Secure</text>
+      <text x={1185} y={408} textAnchor="end" fontSize="7" fill={C.green} opacity="0.8" fontFamily="Source Code Pro,monospace">Traffic</text>
+
+      {/* VM-1 -> VM-3 (Blocked Flow) */}
+      <path d="M 1248 210 L 1270 210 Q 1280 210 1280 220 L 1280 440 Q 1280 450 1270 450 L 1248 450" fill="none" stroke={C.red} strokeWidth="1.5" strokeDasharray="5 5" strokeOpacity="0.7" markerEnd="url(#arr-red)" />
+      <g transform="translate(1280, 395)">
+        <circle r="8" fill={C.n7} stroke={C.red} strokeWidth="1.5" />
+        <path d="M -3 -3 L 3 3 M 3 -3 L -3 3" stroke={C.red} strokeWidth="1.5" strokeLinecap="round" />
+      </g>
+      <text x={1292} y={390} textAnchor="start" fontSize="8" fill={C.red} fontFamily="Source Code Pro,monospace" fontWeight="700">Blocked Flow</text>
+      <text x={1292} y={401} textAnchor="start" fontSize="7" fill={C.red} opacity="0.8" fontFamily="Source Code Pro,monospace">NSG Deny Rule</text>
+      <text x={1292} y={410} textAnchor="start" fontSize="7" fill={C.red} opacity="0.8" fontFamily="Source Code Pro,monospace">Backend Isolation</text>
+
       {/* ── Nodes ── */}
       {/* Top row — outside groups */}
       <Node x={X.r}    y={Y.top} w={155} h={46} label="🌐 Internet / Admin"  color={C.purple} onHover={h} />
-      <Node x={X.stor} y={Y.top} w={162} h={46} label="support-public-ip"    sub="Static IPv4" color={C.yellow} onHover={h} />
+      <Node x={X.ni}   y={Y.top} w={162} h={46} label="support-public-ip"    sub="Static IPv4" color={C.yellow} onHover={h} />
 
       <Node x={X.u}  y={Y.r1} w={125} h={46} label="user1 &amp; user2"  color={C.purple} onHover={h} />
       <Node x={X.u}  y={Y.r2} w={125} h={46} label="user3 &amp; user4"  color={C.blue}   onHover={h} />

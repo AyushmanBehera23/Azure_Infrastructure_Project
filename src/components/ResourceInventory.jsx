@@ -25,8 +25,8 @@ const resources = [
     category: 'Security (NSGs)', icon: <FaShieldAlt />, color: 'var(--color-3)',
     items: [
       { name: 'nsg-1', type: 'Network Security Group', detail: 'Allow RDP TCP 3389 from Admin IP · Billing Subnet' },
-      { name: 'nsg-2', type: 'Network Security Group', detail: 'Allow RDP TCP 3389 from Admin IP · Escalations Subnet' },
-      { name: 'nsg-3', type: 'Network Security Group', detail: 'Allow RDP TCP 3389 from Admin IP · Ticketing Subnet' },
+      { name: 'nsg-2', type: 'Network Security Group', detail: 'Allow traffic from vm-1 (10.10.1.4) · Escalations Subnet' },
+      { name: 'nsg-3', type: 'Network Security Group', detail: 'Allow traffic from vm-2 (10.10.2.4) · Ticketing Subnet' },
     ]
   },
   {

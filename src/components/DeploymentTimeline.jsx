@@ -21,7 +21,7 @@ const DeploymentTimeline = () => (
   <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
     <h2 style={{ textAlign: 'center', marginBottom: '0.75rem', fontFamily: 'Sora', color: 'var(--n-1)', fontSize: 'clamp(2rem,3.5vw,3rem)', fontWeight: 600 }}>Deployment Timeline</h2>
     <p style={{ textAlign: 'center', color: 'var(--n-4)', fontFamily: 'var(--font-code)', fontSize: '0.8rem', marginBottom: '2.5rem', letterSpacing: '0.08em' }}>
-      2026-05-07 · RG-SupportPortal · Central India
+      · RG-SupportPortal · Central India
     </p>
 
     <div style={{ position: 'relative', paddingLeft: '2rem' }}>

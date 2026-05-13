@@ -7,7 +7,7 @@ const phases = [
     title: "Foundation & Identity",
     desc: "Setting up the digital office and creating user accounts.",
     steps: [
-      { num: 1,  title: 'Create Resource Group', why: 'The main container.',         desc: 'RG-SupportPortal in East Asia.' },
+      { num: 1,  title: 'Create Resource Group', why: 'The main container.',         desc: 'RG-SupportPortal in Central India.' },
       { num: 2,  title: 'Create Users',          why: 'Employee accounts.',           desc: 'Created 6 users with auto-passwords.' },
       { num: 3,  title: 'Create Groups',         why: 'Grouping users.',             desc: 'Billing-Sub, Escalations-Sub, Ticketing-Sub.' },
       { num: 4,  title: 'Assign Users',          why: 'Departments.',                desc: '2 users per group.' },
@@ -21,7 +21,7 @@ const phases = [
       { num: 6,  title: 'Virtual Network',  why: 'The secure perimeter.',  desc: 'support-vnet (10.10.0.0/16).' },
       { num: 7,  title: 'Create Subnets',   why: 'Dividing the office.',   desc: 'Billing, Escalations, Ticketing subnets.' },
       { num: 8,  title: 'Create NSGs',      why: 'Security guards.',       desc: 'nsg-1, nsg-2, nsg-3.' },
-      { num: 9,  title: 'RDP Rules',        why: 'Allow admin access.',    desc: 'Allow Port 3389 from My IP.' },
+      { num: 9,  title: 'NSG Tiered Rules',   why: 'Enforce access control.',  desc: 'nsg-1: RDP from Admin IP. nsg-2: Allow vm-1 only. nsg-3: Allow vm-2 only.' },
       { num: 10, title: 'Associate NSGs',   why: 'Guards at doors.',       desc: 'Linked NSGs to subnets.' },
     ]
   },
@@ -31,7 +31,7 @@ const phases = [
     steps: [
       { num: 11, title: 'Public IP',    why: 'Outside access.',        desc: 'support-public-ip created.' },
       { num: 12, title: 'Create NICs',  why: 'Network cables.',        desc: 'Public IP attached ONLY to nic-1.' },
-      { num: 13, title: 'Create VMs',   why: 'Deploying workstations.', desc: 'vm-1, vm-2, vm-3, vm-4.' },
+      { num: 13, title: 'Create VMs',   why: 'Deploying workstations.', desc: 'vm-1 (Billing), vm-2 (Escalations), vm-3 (Ticketing).' },
       { num: 14, title: 'VM Access',    why: 'Log into workstations.', desc: 'Assigned VM Login roles.' },
     ]
   },
@@ -46,7 +46,7 @@ const phases = [
       { num: 19, title: 'Assign Policy',    why: 'Enforcing the rule.',   desc: 'Applied to RG-SupportPortal.' },
       { num: 20, title: 'Backup Vault',     why: 'Disaster recovery.',    desc: 'support-backup-vault.' },
       { num: 21, title: 'Backup Policy',    why: 'Save data.',            desc: 'Daily, 7-day retention.' },
-      { num: 22, title: 'Backup VMs',       why: 'Protect critical data.', desc: 'Enabled for vm-3 & vm-4.' },
+      { num: 22, title: 'Backup VMs',       why: 'Protect critical data.', desc: 'Enabled for vm-3 (Ticketing).' },
     ]
   }
 ];

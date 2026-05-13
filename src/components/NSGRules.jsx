@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaShieldAlt, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 
 const nsgs = [
-  { name: 'nsg-1', subnet: 'billing-subnet (10.10.1.0/24)', vm: 'vm-1' },
-  { name: 'nsg-2', subnet: 'escalations-subnet (10.10.2.0/24)', vm: 'vm-2' },
-  { name: 'nsg-3', subnet: 'ticketing-subnet (10.10.3.0/24)', vm: 'vm-3' },
+  { id: 'nsg-1', name: 'nsg-1', subnet: 'billing-subnet (10.10.1.0/24)', vm: 'vm-1' },
+  { id: 'nsg-2', name: 'nsg-2', subnet: 'escalations-subnet (10.10.2.0/24)', vm: 'vm-2' },
+  { id: 'nsg-3', name: 'nsg-3', subnet: 'ticketing-subnet (10.10.3.0/24)', vm: 'vm-3' },
 ];
 
-const inbound = [
-  { priority: 100,   name: 'Allow-RDP-MyIP',               port: '3389', proto: 'TCP', src: 'Admin IP',         dst: 'Any',            action: 'Allow' },
-  { priority: 65000, name: 'AllowVnetInBound',              port: 'Any',  proto: 'Any', src: 'VirtualNetwork',   dst: 'VirtualNetwork', action: 'Allow' },
-  { priority: 65001, name: 'AllowAzureLoadBalancerInBound', port: 'Any',  proto: 'Any', src: 'AzureLoadBalancer',dst: 'Any',            action: 'Allow' },
-  { priority: 65500, name: 'DenyAllInBound',                port: 'Any',  proto: 'Any', src: 'Any',              dst: 'Any',            action: 'Deny'  },
-];
+const inboundRules = {
+  'nsg-1': [
+    { priority: 100,   name: 'Allow-RDP-MyIP',               port: '3389', proto: 'TCP', src: 'Admin IP',         dst: 'Any',            action: 'Allow' },
+    { priority: 65000, name: 'AllowVnetInBound',              port: 'Any',  proto: 'Any', src: 'VirtualNetwork',   dst: 'VirtualNetwork', action: 'Allow' },
+    { priority: 65001, name: 'AllowAzureLoadBalancerInBound', port: 'Any',  proto: 'Any', src: 'AzureLoadBalancer',dst: 'Any',            action: 'Allow' },
+    { priority: 65500, name: 'DenyAllInBound',                port: 'Any',  proto: 'Any', src: 'Any',              dst: 'Any',            action: 'Deny'  },
+  ],
+  'nsg-2': [
+    { priority: 110,   name: 'Allow-VM1-To-VM2',             port: '*',    proto: 'Any', src: '10.10.1.4',        dst: 'Any',            action: 'Allow' },
+    { priority: 65000, name: 'AllowVnetInBound',              port: 'Any',  proto: 'Any', src: 'VirtualNetwork',   dst: 'VirtualNetwork', action: 'Allow' },
+    { priority: 65001, name: 'AllowAzureLoadBalancerInBound', port: 'Any',  proto: 'Any', src: 'AzureLoadBalancer',dst: 'Any',            action: 'Allow' },
+    { priority: 65500, name: 'DenyAllInBound',                port: 'Any',  proto: 'Any', src: 'Any',              dst: 'Any',            action: 'Deny'  },
+  ],
+  'nsg-3': [
+    { priority: 120,   name: 'Allow-VM2-To-VM3',             port: '*',    proto: 'Any', src: '10.10.2.4',        dst: 'Any',            action: 'Allow' },
+    { priority: 65000, name: 'AllowVnetInBound',              port: 'Any',  proto: 'Any', src: 'VirtualNetwork',   dst: 'VirtualNetwork', action: 'Allow' },
+    { priority: 65001, name: 'AllowAzureLoadBalancerInBound', port: 'Any',  proto: 'Any', src: 'AzureLoadBalancer',dst: 'Any',            action: 'Allow' },
+    { priority: 65500, name: 'DenyAllInBound',                port: 'Any',  proto: 'Any', src: 'Any',              dst: 'Any',            action: 'Deny'  },
+  ]
+};
 
 const outbound = [
   { priority: 65000, name: 'AllowVnetOutBound',     port: 'Any', proto: 'Any', src: 'VirtualNetwork', dst: 'VirtualNetwork', action: 'Allow' },
@@ -57,29 +71,43 @@ const RuleTable = ({ rules, dir }) => (
   </div>
 );
 
-const NSGRules = () => (
-  <motion.div initial={{opacity:0,y:30}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.6}}>
-    <h2 style={{ textAlign:'center', marginBottom:'0.75rem', fontFamily:'Sora', color:'var(--n-1)', fontSize:'clamp(2rem,3.5vw,3rem)', fontWeight:600 }}>NSG Security Rules</h2>
-    <p style={{ textAlign:'center', color:'var(--n-4)', fontSize:'0.875rem', marginBottom:'2rem' }}>All 3 NSGs share identical rule sets. Only RDP (TCP 3389) from admin IP is permitted inbound.</p>
+const NSGRules = () => {
+  const [activeNsg, setActiveNsg] = useState('nsg-1');
 
-    <div style={{ display:'flex', gap:'1rem', flexWrap:'wrap', marginBottom:'2rem', justifyContent:'center' }}>
-      {nsgs.map((n,i) => (
-        <div key={i} className="card" style={{ padding:'1rem 1.5rem', display:'flex', alignItems:'center', gap:'0.75rem', flex:'1', minWidth:'220px' }}>
-          <FaShieldAlt style={{ color:'var(--color-3)', fontSize:'1.2rem', flexShrink:0 }}/>
-          <div>
-            <div style={{ color:'var(--color-3)', fontFamily:'var(--font-code)', fontWeight:700 }}>{n.name}</div>
-            <div style={{ color:'var(--n-4)', fontSize:'0.75rem' }}>{n.subnet}</div>
-            <div style={{ color:'var(--n-3)', fontSize:'0.75rem' }}>Attached to: <span style={{color:'var(--color-2)'}}>{n.vm}</span></div>
+  return (
+    <motion.div initial={{opacity:0,y:30}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.6}}>
+      <h2 style={{ textAlign:'center', marginBottom:'0.75rem', fontFamily:'Sora', color:'var(--n-1)', fontSize:'clamp(2rem,3.5vw,3rem)', fontWeight:600 }}>NSG Security Rules</h2>
+      <p style={{ textAlign:'center', color:'var(--n-4)', fontSize:'0.875rem', marginBottom:'2rem' }}>Each NSG is strictly scoped to allow only tiered application flow.</p>
+
+      <div style={{ display:'flex', gap:'1rem', flexWrap:'wrap', marginBottom:'2rem', justifyContent:'center' }}>
+        {nsgs.map((n,i) => (
+          <div 
+            key={i} 
+            onClick={() => setActiveNsg(n.id)}
+            className="card" 
+            style={{ 
+              padding:'1rem 1.5rem', display:'flex', alignItems:'center', gap:'0.75rem', flex:'1', minWidth:'220px', cursor:'pointer',
+              border: activeNsg === n.id ? '1px solid var(--color-3)' : '1px solid var(--n-6)',
+              background: activeNsg === n.id ? 'rgba(133, 141, 255, 0.05)' : 'var(--n-8)'
+            }}
+          >
+            <FaShieldAlt style={{ color: activeNsg === n.id ? 'var(--color-3)' : 'var(--n-5)', fontSize:'1.2rem', flexShrink:0 }}/>
+            <div>
+              <div style={{ color: activeNsg === n.id ? 'var(--color-3)' : 'var(--n-3)', fontFamily:'var(--font-code)', fontWeight:700 }}>{n.name}</div>
+              <div style={{ color:'var(--n-4)', fontSize:'0.75rem' }}>{n.subnet}</div>
+              <div style={{ color:'var(--n-3)', fontSize:'0.75rem' }}>Attached to: <span style={{color:'var(--color-2)'}}>{n.vm}</span></div>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
 
-    <div className="card" style={{ padding:'1.5rem 2rem' }}>
-      <RuleTable rules={inbound}  dir="Inbound"  />
-      <RuleTable rules={outbound} dir="Outbound" />
-    </div>
-  </motion.div>
-);
+      <div className="card" style={{ padding:'1.5rem 2rem' }}>
+        <h4 style={{ color: 'var(--color-3)', marginBottom: '1.5rem' }}>Rules for {activeNsg}</h4>
+        <RuleTable rules={inboundRules[activeNsg]}  dir="Inbound"  />
+        <RuleTable rules={outbound} dir="Outbound" />
+      </div>
+    </motion.div>
+  );
+};
 
 export default NSGRules;

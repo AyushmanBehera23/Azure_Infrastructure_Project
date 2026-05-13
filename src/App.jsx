@@ -13,10 +13,11 @@ import StoragePolicy from './components/StoragePolicy';
 import Backup from './components/Backup';
 import CostEstimator from './components/CostEstimator';
 import ThreatModel from './components/ThreatModel';
-import SecurityPosture from './components/SecurityPosture';
 import BuildTimeline from './components/BuildTimeline';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
+import DemoVideo from './components/DemoVideo';
+import ScreenshotsPDF from './components/ScreenshotsPDF';
 import { motion } from 'framer-motion';
 
 function App() {
@@ -40,7 +41,6 @@ function App() {
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <a href="#overview" className="btn" style={{ background: 'linear-gradient(135deg,var(--color-1),var(--color-5))', border: 'none', color: '#fff', padding: '0.75rem 2rem' }}>View Infrastructure</a>
-              <a href="#security" className="btn">Security Posture →</a>
             </div>
           </motion.div>
         </div>
@@ -48,6 +48,8 @@ function App() {
 
       <div className="container" style={{ paddingBottom: '6rem' }}>
         <section id="overview"      className="section" style={{ paddingTop: '2rem' }}><Overview /></section>
+        <section id="demo"          className="section"><DemoVideo /></section>
+        <section id="screenshots"   className="section"><ScreenshotsPDF /></section>
         <section id="timeline"      className="section"><DeploymentTimeline /></section>
         <section id="inventory"     className="section"><ResourceInventory /></section>
         <section id="identity"      className="section"><IdentityTable /></section>
@@ -64,7 +66,6 @@ function App() {
         </section>
         <section id="cost"          className="section"><CostEstimator /></section>
         <section id="threats"       className="section"><ThreatModel /></section>
-        <section id="security"      className="section"><SecurityPosture /></section>
         <section id="build-guide"   className="section"><BuildTimeline /></section>
       </div>
 

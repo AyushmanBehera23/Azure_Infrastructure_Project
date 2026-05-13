@@ -14,7 +14,7 @@ const subnets = [
     access: 'Public IP (support-public-ip)',
     rules: [
       { name: 'Allow-RDP-MyIP', port: '3389', action: 'Allow', desc: 'Admin RDP access from trusted IP' },
-      { name: 'DenyAllInBound', port: 'Any',  action: 'Deny',  desc: 'All other inbound traffic blocked' },
+      { name: 'DenyAllInBound', port: 'Any', action: 'Deny', desc: 'All other inbound traffic blocked' },
     ],
   },
   {
@@ -27,8 +27,8 @@ const subnets = [
     nic: 'nic-2',
     access: 'Private Only',
     rules: [
-      { name: 'Allow-RDP-MyIP', port: '3389', action: 'Allow', desc: 'Admin RDP access from trusted IP' },
-      { name: 'DenyAllInBound', port: 'Any',  action: 'Deny',  desc: 'All other inbound traffic blocked' },
+      { name: 'Allow-VM1-To-VM2', port: '*', action: 'Allow', desc: 'Allow traffic from vm-1 (10.10.1.4)' },
+      { name: 'DenyAllInBound', port: 'Any', action: 'Deny', desc: 'All other inbound traffic blocked' },
     ],
   },
   {
@@ -37,12 +37,12 @@ const subnets = [
     cidr: '10.10.3.0/24',
     color: '#7ADB78',
     nsg: 'nsg-3',
-    vm: 'vm-3 + vm-4',
+    vm: 'vm-3',
     nic: 'nic-3 + nic-4',
     access: 'Private Only',
     rules: [
-      { name: 'Allow-RDP-MyIP', port: '3389', action: 'Allow', desc: 'Admin RDP access from trusted IP' },
-      { name: 'DenyAllInBound', port: 'Any',  action: 'Deny',  desc: 'All other inbound traffic blocked' },
+      { name: 'Allow-VM2-To-VM3', port: '*', action: 'Allow', desc: 'Allow traffic from vm-2 (10.10.2.4)' },
+      { name: 'DenyAllInBound', port: 'Any', action: 'Deny', desc: 'All other inbound traffic blocked' },
     ],
   },
 ];

@@ -24,7 +24,14 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+@media (min-width: 1440px) {
+  html { font-size: 18px; }
+}
+@media (min-width: 1920px) {
+  html { font-size: 22px; }
+}
 
 body {
   font-family: var(--font-sora);
@@ -94,6 +101,13 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+@media (min-width: 1440px) {
+  .container { max-width: 1400px; }
+}
+@media (min-width: 1920px) {
+  .container { max-width: 1600px; }
 }
 
 /* ── GRID ── */
